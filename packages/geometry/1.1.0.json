@@ -1,0 +1,189 @@
+{
+  "name": "geometry",
+  "version": "1.1.0",
+  "description": "Shape conventions (box/prism/cylinder/mesh + booleans over children, mm, z-up) carried in a node's payload, and the solver contracts the rule language reaches with solve('geometry/…', path): volume, bbox_w/d/h, bbox_min/mid, z_min/z_max, clearance(a, b), realizes(p) and solids(p) (does this branch produce a solid at all), contains(a, b, tol) and overlap(a, b) (enclosure and collision, by bounding box), and shared_edge(a, b, tol) — the length of boundary two bodies actually share in plan. Note shared_edge is not clearance: two bodies can have zero clearance and share no boundary, so only shared_edge answers 'do these adjoin'. Implemented natively here; any module honouring the same contracts may replace it.",
+  "publisher": "standard library",
+  "requires": [],
+  "vocabulary": [
+    {
+      "kind": "geometry",
+      "description": "Convention pack, not a node kind: a node gets a solid by carrying a shape payload — box {size [w,d,h]}, prism {polygon, height}, cylinder {diameter, height}, mesh {uri}, union/difference/intersection over children. Vertical extrusions, mm, z up.",
+      "params": {},
+      "links": {},
+      "operations": {}
+    }
+  ],
+  "rules": [],
+  "solvers": [
+    {
+      "name": "geometry/volume",
+      "description": "standard geometry contract; see the package description",
+      "blob": "",
+      "medium": "wasm",
+      "native": true,
+      "reads": [
+        ""
+      ],
+      "params_doc": {},
+      "fuel": 500000000
+    },
+    {
+      "name": "geometry/bbox_w",
+      "description": "standard geometry contract; see the package description",
+      "blob": "",
+      "medium": "wasm",
+      "native": true,
+      "reads": [
+        ""
+      ],
+      "params_doc": {},
+      "fuel": 500000000
+    },
+    {
+      "name": "geometry/bbox_d",
+      "description": "standard geometry contract; see the package description",
+      "blob": "",
+      "medium": "wasm",
+      "native": true,
+      "reads": [
+        ""
+      ],
+      "params_doc": {},
+      "fuel": 500000000
+    },
+    {
+      "name": "geometry/bbox_h",
+      "description": "standard geometry contract; see the package description",
+      "blob": "",
+      "medium": "wasm",
+      "native": true,
+      "reads": [
+        ""
+      ],
+      "params_doc": {},
+      "fuel": 500000000
+    },
+    {
+      "name": "geometry/z_min",
+      "description": "standard geometry contract; see the package description",
+      "blob": "",
+      "medium": "wasm",
+      "native": true,
+      "reads": [
+        ""
+      ],
+      "params_doc": {},
+      "fuel": 500000000
+    },
+    {
+      "name": "geometry/z_max",
+      "description": "standard geometry contract; see the package description",
+      "blob": "",
+      "medium": "wasm",
+      "native": true,
+      "reads": [
+        ""
+      ],
+      "params_doc": {},
+      "fuel": 500000000
+    },
+    {
+      "name": "geometry/clearance",
+      "description": "standard geometry contract; see the package description",
+      "blob": "",
+      "medium": "wasm",
+      "native": true,
+      "reads": [
+        ""
+      ],
+      "params_doc": {},
+      "fuel": 500000000
+    },
+    {
+      "name": "geometry/realizes",
+      "description": "standard geometry contract; see the package description",
+      "blob": "",
+      "medium": "wasm",
+      "native": true,
+      "reads": [
+        ""
+      ],
+      "params_doc": {},
+      "fuel": 500000000
+    },
+    {
+      "name": "geometry/solids",
+      "description": "standard geometry contract; see the package description",
+      "blob": "",
+      "medium": "wasm",
+      "native": true,
+      "reads": [
+        ""
+      ],
+      "params_doc": {},
+      "fuel": 500000000
+    },
+    {
+      "name": "geometry/shared_edge",
+      "description": "standard geometry contract; see the package description",
+      "blob": "",
+      "medium": "wasm",
+      "native": true,
+      "reads": [
+        ""
+      ],
+      "params_doc": {},
+      "fuel": 500000000
+    },
+    {
+      "name": "geometry/contains",
+      "description": "standard geometry contract; see the package description",
+      "blob": "",
+      "medium": "wasm",
+      "native": true,
+      "reads": [
+        ""
+      ],
+      "params_doc": {},
+      "fuel": 500000000
+    },
+    {
+      "name": "geometry/overlap",
+      "description": "standard geometry contract; see the package description",
+      "blob": "",
+      "medium": "wasm",
+      "native": true,
+      "reads": [
+        ""
+      ],
+      "params_doc": {},
+      "fuel": 500000000
+    },
+    {
+      "name": "geometry/bbox_min",
+      "description": "standard geometry contract; see the package description",
+      "blob": "",
+      "medium": "wasm",
+      "native": true,
+      "reads": [
+        ""
+      ],
+      "params_doc": {},
+      "fuel": 500000000
+    },
+    {
+      "name": "geometry/bbox_mid",
+      "description": "standard geometry contract; see the package description",
+      "blob": "",
+      "medium": "wasm",
+      "native": true,
+      "reads": [
+        ""
+      ],
+      "params_doc": {},
+      "fuel": 500000000
+    }
+  ],
+  "examples": [],
+  "counter_examples": []
+}

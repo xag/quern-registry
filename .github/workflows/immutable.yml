@@ -1,0 +1,23 @@
+# Versions are immutable: an artifact, once published, is never edited or removed.
+# bom's publish gate enforces this at the content level; this check enforces it at
+# the file level, so not even a hand-pushed commit can rewrite history quietly.
+# (Full validate_package CI needs bom installable here — deferred while bom is a
+# private repo. The proof gate still runs at publish and again at every sync.)
+name: versions are immutable
+on: [pull_request]
+jobs:
+  immutability:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - run: |
+          base=$(git merge-base "origin/${{ github.base_ref }}" HEAD)
+          changed=$(git diff --name-only --diff-filter=MD "$base" HEAD -- packages blobs)
+          if [ -n "$changed" ]; then
+            echo "::error::versions are immutable — these artifacts were modified or deleted:"
+            echo "$changed"
+            exit 1
+          fi
+          echo "only additions under packages/ and blobs/ — immutability holds"
