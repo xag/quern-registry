@@ -1,7 +1,7 @@
-# bom-registry
+# quern-registry
 
-This working tree **is** a `bom.library.Library` root: `packages/<name>/<version>.json`
-plus `blobs/<sha256>`. There is no format here that bom does not already own — the
+This working tree **is** a `quern.library.Library` root: `packages/<name>/<version>.json`
+plus `blobs/<sha256>`. There is no format here that quern does not already own — the
 repo is nothing but a published Library, and git is its transport.
 
 Git is transport, **not identity**. Identity is the content digest a pin carries
@@ -11,12 +11,12 @@ lie about meaning; a registry that drifted would be caught by the first pin it f
 
 ## The doors
 
-- **In:** `bom publish <artifact> --registry <this checkout>` — and nothing else.
+- **In:** `quern publish <artifact> --registry <this checkout>` — and nothing else.
   Publishing is proof-gated: every rule exercised by the package's own examples,
   every rule refuted by its counter-examples staged alone, every wasm blob true to
   its hash and ABI. A package that cannot demonstrate itself does not enter.
-- **Out:** `bom pin name@version` → `bom.lock` (the flattened closure, every entry
-  hash-bearing), then `bom sync` → a local Library cache. Sync re-enters through
+- **Out:** `quern pin name@version` → `quern.lock` (the flattened closure, every entry
+  hash-bearing), then `quern sync` → a local Library cache. Sync re-enters through
   `publish`, so **the proof re-runs on the consumer's machine**: this registry is
   trusted for transport, not for validation.
 

@@ -1,7 +1,7 @@
 # Versions are immutable: an artifact, once published, is never edited or removed.
-# bom's publish gate enforces this at the content level; this check enforces it at
+# quern's publish gate enforces this at the content level; this check enforces it at
 # the file level, so not even a hand-pushed commit can rewrite history quietly.
-# (Full validate_package CI needs bom installable here — deferred while bom is a
+# (Full validate_package CI needs quern installable here — deferred while quern is a
 # private repo. The proof gate still runs at publish and again at every sync.)
 name: versions are immutable
 on: [pull_request]
