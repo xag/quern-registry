@@ -1,0 +1,1372 @@
+{
+  "name": "chores-model",
+  "version": "0.1.0",
+  "description": "The semantic model of chores, slice 1: rhythm engine (calendar, cadence, quota over one Monday-anchored week), turn lifecycle (emitted, done, skipped, through assignment), and the charter wall — re-erected here as an invariant after the app traded its coded wall for prose. A small abstract instance (2 members, 3 chores, 7 days), on purpose: its size is a journaled hypothesis, its four invariants are what model/prove settles exhaustively, and its event-kinds are the one span list the instrumentation emits. Governance/redeal is slice 2; fairness convergence is slice 3; both are ledger debts.",
+  "publisher": "poietic.studio",
+  "requires": [
+    {
+      "name": "semantic-model",
+      "version": "0.1.1",
+      "sha256": "7fc53dbba504b0dbee2174433281614817f1843b5ecf4cffacf3db919193093a"
+    }
+  ],
+  "vocabulary": [],
+  "rules": [],
+  "solvers": [],
+  "examples": [
+    {
+      "id": "chores-model",
+      "kind": "model",
+      "name": "chores, slice 1: rhythm engine, turn lifecycle, charter wall",
+      "params": {},
+      "links": {},
+      "meta": {},
+      "payload": {},
+      "children": [
+        {
+          "id": "today",
+          "kind": "state-var",
+          "name": "",
+          "params": {},
+          "links": {},
+          "meta": {},
+          "payload": {
+            "type": "int",
+            "domain": {
+              "min": 0,
+              "max": 6
+            },
+            "init": 0
+          },
+          "children": []
+        },
+        {
+          "id": "wash_pending",
+          "kind": "state-var",
+          "name": "",
+          "params": {},
+          "links": {},
+          "meta": {},
+          "payload": {
+            "type": "bool",
+            "init": false
+          },
+          "children": []
+        },
+        {
+          "id": "wash_day",
+          "kind": "state-var",
+          "name": "",
+          "params": {},
+          "links": {},
+          "meta": {},
+          "payload": {
+            "type": "int",
+            "domain": {
+              "min": -1,
+              "max": 6
+            },
+            "init": -1
+          },
+          "children": []
+        },
+        {
+          "id": "hoover_pending",
+          "kind": "state-var",
+          "name": "",
+          "params": {},
+          "links": {},
+          "meta": {},
+          "payload": {
+            "type": "bool",
+            "init": false
+          },
+          "children": []
+        },
+        {
+          "id": "hoover_last",
+          "kind": "state-var",
+          "name": "",
+          "params": {},
+          "links": {},
+          "meta": {},
+          "payload": {
+            "type": "int",
+            "domain": {
+              "min": -1,
+              "max": 6
+            },
+            "init": -1
+          },
+          "children": []
+        },
+        {
+          "id": "hoover_gap",
+          "kind": "state-var",
+          "name": "",
+          "params": {},
+          "links": {},
+          "meta": {},
+          "payload": {
+            "type": "int",
+            "domain": {
+              "min": 0,
+              "max": 2
+            },
+            "init": 2
+          },
+          "children": []
+        },
+        {
+          "id": "bins_pending",
+          "kind": "state-var",
+          "name": "",
+          "params": {},
+          "links": {},
+          "meta": {},
+          "payload": {
+            "type": "bool",
+            "init": false
+          },
+          "children": []
+        },
+        {
+          "id": "bins_done",
+          "kind": "state-var",
+          "name": "",
+          "params": {},
+          "links": {},
+          "meta": {},
+          "payload": {
+            "type": "int",
+            "domain": {
+              "min": 0,
+              "max": 3
+            },
+            "init": 0
+          },
+          "children": []
+        },
+        {
+          "id": "hoover_assignee",
+          "kind": "state-var",
+          "name": "",
+          "params": {},
+          "links": {},
+          "meta": {},
+          "payload": {
+            "type": "enum",
+            "domain": [
+              "none",
+              "m1",
+              "m2"
+            ],
+            "init": "none"
+          },
+          "children": []
+        },
+        {
+          "id": "bins_assignee",
+          "kind": "state-var",
+          "name": "",
+          "params": {},
+          "links": {},
+          "meta": {},
+          "payload": {
+            "type": "enum",
+            "domain": [
+              "none",
+              "m1",
+              "m2"
+            ],
+            "init": "none"
+          },
+          "children": []
+        },
+        {
+          "id": "m1_cannot_heavy",
+          "kind": "state-var",
+          "name": "",
+          "params": {},
+          "links": {},
+          "meta": {},
+          "payload": {
+            "type": "bool",
+            "init": false
+          },
+          "children": []
+        },
+        {
+          "id": "m2_cannot_heavy",
+          "kind": "state-var",
+          "name": "",
+          "params": {},
+          "links": {},
+          "meta": {},
+          "payload": {
+            "type": "bool",
+            "init": false
+          },
+          "children": []
+        },
+        {
+          "id": "day-ticked",
+          "kind": "event-kind",
+          "name": "",
+          "params": {},
+          "links": {},
+          "meta": {},
+          "payload": {
+            "args": {}
+          },
+          "children": [
+            {
+              "id": "day-ticked-license",
+              "kind": "license",
+              "name": "",
+              "params": {},
+              "links": {},
+              "meta": {},
+              "payload": {
+                "expr": "len(ctx('events')) >= 1",
+                "note": "a `now` read inside the span — the tick exists because the clock was consulted; sharpens to 'a now read crossing a day boundary' when window predicates land"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": "turn-emitted",
+          "kind": "event-kind",
+          "name": "",
+          "params": {},
+          "links": {},
+          "meta": {},
+          "payload": {
+            "args": {
+              "chore": {
+                "type": "enum",
+                "domain": [
+                  "wash",
+                  "hoover",
+                  "bins"
+                ]
+              }
+            }
+          },
+          "children": [
+            {
+              "id": "turn-emitted-license",
+              "kind": "license",
+              "name": "",
+              "params": {},
+              "links": {},
+              "meta": {},
+              "payload": {
+                "expr": "len(ctx('events')) >= 1",
+                "note": "the storage reads (household, chores, done) the turn was derived from — turns are a view, and a view claimed without its inputs was invented; sharpens to fx reads of the chore and its completions"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": "turn-done",
+          "kind": "event-kind",
+          "name": "",
+          "params": {},
+          "links": {},
+          "meta": {},
+          "payload": {
+            "args": {
+              "chore": {
+                "type": "enum",
+                "domain": [
+                  "wash",
+                  "hoover",
+                  "bins"
+                ]
+              }
+            }
+          },
+          "children": [
+            {
+              "id": "turn-done-license",
+              "kind": "license",
+              "name": "",
+              "params": {},
+              "links": {},
+              "meta": {},
+              "payload": {
+                "expr": "len(ctx('events')) >= 1",
+                "note": "the completion write — an app.storage.put under the household's done/ collection; the one stored fact of the turn lifecycle, and exactly what this claim must show"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": "turn-skipped",
+          "kind": "event-kind",
+          "name": "",
+          "params": {},
+          "links": {},
+          "meta": {},
+          "payload": {
+            "args": {
+              "chore": {
+                "type": "enum",
+                "domain": [
+                  "wash",
+                  "hoover",
+                  "bins"
+                ]
+              }
+            }
+          },
+          "children": [
+            {
+              "id": "turn-skipped-license",
+              "kind": "license",
+              "name": "",
+              "params": {},
+              "links": {},
+              "meta": {},
+              "payload": {
+                "expr": "len(ctx('events')) >= 1",
+                "note": "the completion write with kind=skipped (minutes 0) — a skip is recorded, not merely rendered; same put, different kind"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": "chore-added",
+          "kind": "event-kind",
+          "name": "",
+          "params": {},
+          "links": {},
+          "meta": {},
+          "payload": {
+            "args": {}
+          },
+          "children": [
+            {
+              "id": "chore-added-license",
+              "kind": "license",
+              "name": "",
+              "params": {},
+              "links": {},
+              "meta": {},
+              "payload": {
+                "expr": "len(ctx('events')) >= 1",
+                "note": "the app.storage.put creating the chore document"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": "chore-updated",
+          "kind": "event-kind",
+          "name": "",
+          "params": {},
+          "links": {},
+          "meta": {},
+          "payload": {
+            "args": {
+              "chore": {
+                "type": "enum",
+                "domain": [
+                  "wash",
+                  "hoover",
+                  "bins"
+                ]
+              },
+              "member": {
+                "type": "enum",
+                "domain": [
+                  "none",
+                  "m1",
+                  "m2"
+                ]
+              }
+            }
+          },
+          "children": [
+            {
+              "id": "chore-updated-license",
+              "kind": "license",
+              "name": "",
+              "params": {},
+              "links": {},
+              "meta": {},
+              "payload": {
+                "expr": "len(ctx('events')) >= 1",
+                "note": "the app.storage.put rewriting the chore document. The span always testifies (chore, assignee-after): assignment lives on the chore, so every chore update re-states who holds it, and a config-only edit binds as a self-assignment"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": "member-updated",
+          "kind": "event-kind",
+          "name": "",
+          "params": {},
+          "links": {},
+          "meta": {},
+          "payload": {
+            "args": {
+              "member": {
+                "type": "enum",
+                "domain": [
+                  "m1",
+                  "m2"
+                ]
+              },
+              "cannot_heavy": {
+                "type": "bool"
+              }
+            }
+          },
+          "children": [
+            {
+              "id": "member-updated-license",
+              "kind": "license",
+              "name": "",
+              "params": {},
+              "links": {},
+              "meta": {},
+              "payload": {
+                "expr": "len(ctx('events')) >= 1",
+                "note": "the app.storage.put rewriting the household document (members live inline). `cannot_heavy` is the arbiter's structured reading of the member's prose, made testimony — the wall is checkable only because the reading is emitted"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": "board-read",
+          "kind": "event-kind",
+          "name": "",
+          "params": {},
+          "links": {},
+          "meta": {},
+          "payload": {
+            "args": {}
+          },
+          "children": [
+            {
+              "id": "board-read-license",
+              "kind": "license",
+              "name": "",
+              "params": {},
+              "links": {},
+              "meta": {},
+              "payload": {
+                "expr": "len(ctx('events')) >= 1",
+                "note": "the storage reads that assembled the board (household, chores, done)"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": "return-after-absence",
+          "kind": "event-kind",
+          "name": "",
+          "params": {},
+          "links": {},
+          "meta": {},
+          "payload": {
+            "args": {}
+          },
+          "children": [
+            {
+              "id": "return-after-absence-license",
+              "kind": "license",
+              "name": "",
+              "params": {},
+              "links": {},
+              "meta": {},
+              "payload": {
+                "expr": "len(ctx('events')) >= 1",
+                "note": "the reads of presence/absence data the return was detected from (app/absence.py's inputs)"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": "next-action-shown",
+          "kind": "event-kind",
+          "name": "",
+          "params": {},
+          "links": {},
+          "meta": {},
+          "payload": {
+            "args": {}
+          },
+          "children": [
+            {
+              "id": "next-action-shown-license",
+              "kind": "license",
+              "name": "",
+              "params": {},
+              "links": {},
+              "meta": {},
+              "payload": {
+                "expr": "len(ctx('events')) >= 1",
+                "note": "the reads the shown action was chosen from. If board assembly hands the renderer pre-read data, the emission belongs inside the reading span — that placement question is the instrumentation issue's, and a red here is its finding, not a nuisance"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": "missed-pile-shown",
+          "kind": "event-kind",
+          "name": "",
+          "params": {},
+          "links": {},
+          "meta": {},
+          "payload": {
+            "args": {}
+          },
+          "children": [
+            {
+              "id": "missed-pile-shown-license",
+              "kind": "license",
+              "name": "",
+              "params": {},
+              "links": {},
+              "meta": {},
+              "payload": {
+                "expr": "len(ctx('events')) >= 1",
+                "note": "the reads the pile was derived from — same posture as next-action-shown"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": "tick",
+          "kind": "action",
+          "name": "",
+          "params": {},
+          "links": {},
+          "meta": {},
+          "payload": {
+            "guard": "today < 6",
+            "updates": [
+              {
+                "var": "today",
+                "expr": "today + 1"
+              }
+            ],
+            "args": {}
+          },
+          "children": [
+            {
+              "id": "tick-witness",
+              "kind": "observation",
+              "name": "",
+              "params": {},
+              "links": {},
+              "meta": {},
+              "payload": {
+                "event": "day-ticked"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": "emit-wash",
+          "kind": "action",
+          "name": "",
+          "params": {},
+          "links": {},
+          "meta": {},
+          "payload": {
+            "guard": "not wash_pending and (today == 1 or today == 4)",
+            "updates": [
+              {
+                "var": "wash_pending",
+                "expr": "true"
+              },
+              {
+                "var": "wash_day",
+                "expr": "today"
+              }
+            ],
+            "args": {
+              "chore": {
+                "type": "enum",
+                "domain": [
+                  "wash"
+                ]
+              }
+            }
+          },
+          "children": [
+            {
+              "id": "emit-wash-witness",
+              "kind": "observation",
+              "name": "",
+              "params": {},
+              "links": {},
+              "meta": {},
+              "payload": {
+                "event": "turn-emitted"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": "emit-hoover",
+          "kind": "action",
+          "name": "",
+          "params": {},
+          "links": {},
+          "meta": {},
+          "payload": {
+            "guard": "not hoover_pending and (hoover_last < 0 or today - hoover_last >= 2)",
+            "updates": [
+              {
+                "var": "hoover_pending",
+                "expr": "true"
+              }
+            ],
+            "args": {
+              "chore": {
+                "type": "enum",
+                "domain": [
+                  "hoover"
+                ]
+              }
+            }
+          },
+          "children": [
+            {
+              "id": "emit-hoover-witness",
+              "kind": "observation",
+              "name": "",
+              "params": {},
+              "links": {},
+              "meta": {},
+              "payload": {
+                "event": "turn-emitted"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": "emit-bins",
+          "kind": "action",
+          "name": "",
+          "params": {},
+          "links": {},
+          "meta": {},
+          "payload": {
+            "guard": "not bins_pending and bins_done < 2",
+            "updates": [
+              {
+                "var": "bins_pending",
+                "expr": "true"
+              }
+            ],
+            "args": {
+              "chore": {
+                "type": "enum",
+                "domain": [
+                  "bins"
+                ]
+              }
+            }
+          },
+          "children": [
+            {
+              "id": "emit-bins-witness",
+              "kind": "observation",
+              "name": "",
+              "params": {},
+              "links": {},
+              "meta": {},
+              "payload": {
+                "event": "turn-emitted"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": "done-wash",
+          "kind": "action",
+          "name": "",
+          "params": {},
+          "links": {},
+          "meta": {},
+          "payload": {
+            "guard": "wash_pending",
+            "updates": [
+              {
+                "var": "wash_pending",
+                "expr": "false"
+              }
+            ],
+            "args": {
+              "chore": {
+                "type": "enum",
+                "domain": [
+                  "wash"
+                ]
+              }
+            }
+          },
+          "children": [
+            {
+              "id": "done-wash-witness",
+              "kind": "observation",
+              "name": "",
+              "params": {},
+              "links": {},
+              "meta": {},
+              "payload": {
+                "event": "turn-done"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": "done-hoover",
+          "kind": "action",
+          "name": "",
+          "params": {},
+          "links": {},
+          "meta": {},
+          "payload": {
+            "guard": "hoover_pending and hoover_assignee != 'none'",
+            "updates": [
+              {
+                "var": "hoover_pending",
+                "expr": "false"
+              },
+              {
+                "var": "hoover_gap",
+                "expr": "min(today - hoover_last, 2) * (hoover_last >= 0) + 2 * (hoover_last < 0)"
+              },
+              {
+                "var": "hoover_last",
+                "expr": "today"
+              }
+            ],
+            "args": {
+              "chore": {
+                "type": "enum",
+                "domain": [
+                  "hoover"
+                ]
+              }
+            }
+          },
+          "children": [
+            {
+              "id": "done-hoover-witness",
+              "kind": "observation",
+              "name": "",
+              "params": {},
+              "links": {},
+              "meta": {},
+              "payload": {
+                "event": "turn-done"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": "done-bins",
+          "kind": "action",
+          "name": "",
+          "params": {},
+          "links": {},
+          "meta": {},
+          "payload": {
+            "guard": "bins_pending and bins_assignee != 'none'",
+            "updates": [
+              {
+                "var": "bins_pending",
+                "expr": "false"
+              },
+              {
+                "var": "bins_done",
+                "expr": "bins_done + 1"
+              }
+            ],
+            "args": {
+              "chore": {
+                "type": "enum",
+                "domain": [
+                  "bins"
+                ]
+              }
+            }
+          },
+          "children": [
+            {
+              "id": "done-bins-witness",
+              "kind": "observation",
+              "name": "",
+              "params": {},
+              "links": {},
+              "meta": {},
+              "payload": {
+                "event": "turn-done"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": "skip-wash",
+          "kind": "action",
+          "name": "",
+          "params": {},
+          "links": {},
+          "meta": {},
+          "payload": {
+            "guard": "wash_pending",
+            "updates": [
+              {
+                "var": "wash_pending",
+                "expr": "false"
+              }
+            ],
+            "args": {
+              "chore": {
+                "type": "enum",
+                "domain": [
+                  "wash"
+                ]
+              }
+            }
+          },
+          "children": [
+            {
+              "id": "skip-wash-witness",
+              "kind": "observation",
+              "name": "",
+              "params": {},
+              "links": {},
+              "meta": {},
+              "payload": {
+                "event": "turn-skipped"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": "skip-hoover",
+          "kind": "action",
+          "name": "",
+          "params": {},
+          "links": {},
+          "meta": {},
+          "payload": {
+            "guard": "hoover_pending",
+            "updates": [
+              {
+                "var": "hoover_pending",
+                "expr": "false"
+              }
+            ],
+            "args": {
+              "chore": {
+                "type": "enum",
+                "domain": [
+                  "hoover"
+                ]
+              }
+            }
+          },
+          "children": [
+            {
+              "id": "skip-hoover-witness",
+              "kind": "observation",
+              "name": "",
+              "params": {},
+              "links": {},
+              "meta": {},
+              "payload": {
+                "event": "turn-skipped"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": "skip-bins",
+          "kind": "action",
+          "name": "",
+          "params": {},
+          "links": {},
+          "meta": {},
+          "payload": {
+            "guard": "bins_pending",
+            "updates": [
+              {
+                "var": "bins_pending",
+                "expr": "false"
+              }
+            ],
+            "args": {
+              "chore": {
+                "type": "enum",
+                "domain": [
+                  "bins"
+                ]
+              }
+            }
+          },
+          "children": [
+            {
+              "id": "skip-bins-witness",
+              "kind": "observation",
+              "name": "",
+              "params": {},
+              "links": {},
+              "meta": {},
+              "payload": {
+                "event": "turn-skipped"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": "assign-wash",
+          "kind": "action",
+          "name": "",
+          "params": {},
+          "links": {},
+          "meta": {},
+          "payload": {
+            "updates": [],
+            "args": {
+              "chore": {
+                "type": "enum",
+                "domain": [
+                  "wash"
+                ]
+              },
+              "member": {
+                "type": "enum",
+                "domain": [
+                  "none",
+                  "m1",
+                  "m2"
+                ]
+              }
+            }
+          },
+          "children": [
+            {
+              "id": "assign-wash-witness",
+              "kind": "observation",
+              "name": "",
+              "params": {},
+              "links": {},
+              "meta": {},
+              "payload": {
+                "event": "chore-updated"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": "assign-hoover",
+          "kind": "action",
+          "name": "",
+          "params": {},
+          "links": {},
+          "meta": {},
+          "payload": {
+            "guard": "not (member == 'm1' and m1_cannot_heavy) and not (member == 'm2' and m2_cannot_heavy)",
+            "updates": [
+              {
+                "var": "hoover_assignee",
+                "expr": "member"
+              }
+            ],
+            "args": {
+              "chore": {
+                "type": "enum",
+                "domain": [
+                  "hoover"
+                ]
+              },
+              "member": {
+                "type": "enum",
+                "domain": [
+                  "none",
+                  "m1",
+                  "m2"
+                ]
+              }
+            }
+          },
+          "children": [
+            {
+              "id": "assign-hoover-witness",
+              "kind": "observation",
+              "name": "",
+              "params": {},
+              "links": {},
+              "meta": {},
+              "payload": {
+                "event": "chore-updated"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": "assign-bins",
+          "kind": "action",
+          "name": "",
+          "params": {},
+          "links": {},
+          "meta": {},
+          "payload": {
+            "guard": "not (member == 'm1' and m1_cannot_heavy) and not (member == 'm2' and m2_cannot_heavy)",
+            "updates": [
+              {
+                "var": "bins_assignee",
+                "expr": "member"
+              }
+            ],
+            "args": {
+              "chore": {
+                "type": "enum",
+                "domain": [
+                  "bins"
+                ]
+              },
+              "member": {
+                "type": "enum",
+                "domain": [
+                  "none",
+                  "m1",
+                  "m2"
+                ]
+              }
+            }
+          },
+          "children": [
+            {
+              "id": "assign-bins-witness",
+              "kind": "observation",
+              "name": "",
+              "params": {},
+              "links": {},
+              "meta": {},
+              "payload": {
+                "event": "chore-updated"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": "restrict-member",
+          "kind": "action",
+          "name": "",
+          "params": {},
+          "links": {},
+          "meta": {},
+          "payload": {
+            "guard": "not (member == 'm1' and (hoover_assignee == 'm1' or bins_assignee == 'm1')) and not (member == 'm2' and (hoover_assignee == 'm2' or bins_assignee == 'm2'))",
+            "updates": [
+              {
+                "var": "m1_cannot_heavy",
+                "expr": "m1_cannot_heavy or member == 'm1'"
+              },
+              {
+                "var": "m2_cannot_heavy",
+                "expr": "m2_cannot_heavy or member == 'm2'"
+              }
+            ],
+            "args": {
+              "member": {
+                "type": "enum",
+                "domain": [
+                  "m1",
+                  "m2"
+                ]
+              },
+              "cannot_heavy": {
+                "type": "enum",
+                "domain": [
+                  true
+                ]
+              }
+            }
+          },
+          "children": [
+            {
+              "id": "restrict-member-witness",
+              "kind": "observation",
+              "name": "",
+              "params": {},
+              "links": {},
+              "meta": {},
+              "payload": {
+                "event": "member-updated"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": "clear-member",
+          "kind": "action",
+          "name": "",
+          "params": {},
+          "links": {},
+          "meta": {},
+          "payload": {
+            "updates": [
+              {
+                "var": "m1_cannot_heavy",
+                "expr": "m1_cannot_heavy and member != 'm1'"
+              },
+              {
+                "var": "m2_cannot_heavy",
+                "expr": "m2_cannot_heavy and member != 'm2'"
+              }
+            ],
+            "args": {
+              "member": {
+                "type": "enum",
+                "domain": [
+                  "m1",
+                  "m2"
+                ]
+              },
+              "cannot_heavy": {
+                "type": "enum",
+                "domain": [
+                  false
+                ]
+              }
+            }
+          },
+          "children": [
+            {
+              "id": "clear-member-witness",
+              "kind": "observation",
+              "name": "",
+              "params": {},
+              "links": {},
+              "meta": {},
+              "payload": {
+                "event": "member-updated"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": "add-chore",
+          "kind": "action",
+          "name": "",
+          "params": {},
+          "links": {},
+          "meta": {},
+          "payload": {
+            "updates": [],
+            "args": {}
+          },
+          "children": [
+            {
+              "id": "add-chore-witness",
+              "kind": "observation",
+              "name": "",
+              "params": {},
+              "links": {},
+              "meta": {},
+              "payload": {
+                "event": "chore-added"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": "read-board",
+          "kind": "action",
+          "name": "",
+          "params": {},
+          "links": {},
+          "meta": {},
+          "payload": {
+            "updates": [],
+            "args": {}
+          },
+          "children": [
+            {
+              "id": "read-board-witness",
+              "kind": "observation",
+              "name": "",
+              "params": {},
+              "links": {},
+              "meta": {},
+              "payload": {
+                "event": "board-read"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": "return",
+          "kind": "action",
+          "name": "",
+          "params": {},
+          "links": {},
+          "meta": {},
+          "payload": {
+            "updates": [],
+            "args": {}
+          },
+          "children": [
+            {
+              "id": "return-witness",
+              "kind": "observation",
+              "name": "",
+              "params": {},
+              "links": {},
+              "meta": {},
+              "payload": {
+                "event": "return-after-absence"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": "show-next",
+          "kind": "action",
+          "name": "",
+          "params": {},
+          "links": {},
+          "meta": {},
+          "payload": {
+            "updates": [],
+            "args": {}
+          },
+          "children": [
+            {
+              "id": "show-next-witness",
+              "kind": "observation",
+              "name": "",
+              "params": {},
+              "links": {},
+              "meta": {},
+              "payload": {
+                "event": "next-action-shown"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": "show-missed",
+          "kind": "action",
+          "name": "",
+          "params": {},
+          "links": {},
+          "meta": {},
+          "payload": {
+            "updates": [],
+            "args": {}
+          },
+          "children": [
+            {
+              "id": "show-missed-witness",
+              "kind": "observation",
+              "name": "",
+              "params": {},
+              "links": {},
+              "meta": {},
+              "payload": {
+                "event": "missed-pile-shown"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": "charter-wall",
+          "kind": "invariant",
+          "name": "",
+          "params": {},
+          "links": {},
+          "meta": {},
+          "payload": {
+            "expr": "not (hoover_assignee == 'm1' and m1_cannot_heavy) and not (hoover_assignee == 'm2' and m2_cannot_heavy) and not (bins_assignee == 'm1' and m1_cannot_heavy) and not (bins_assignee == 'm2' and m2_cannot_heavy)",
+            "note": "no heavy chore is ever held by a member whose restriction covers it — in ALL reachable states, including through a restriction growing after assignment. The wall the code gave up, held here instead."
+          },
+          "children": []
+        },
+        {
+          "id": "calendar-never-floats",
+          "kind": "invariant",
+          "name": "",
+          "params": {},
+          "links": {},
+          "meta": {},
+          "payload": {
+            "expr": "not wash_pending or wash_day == 1 or wash_day == 4",
+            "note": "a calendar chore's open turn sits on a day in its weekday set, always — the anchor is the clock, and it does not drift with neglect."
+          },
+          "children": []
+        },
+        {
+          "id": "quota-bound",
+          "kind": "invariant",
+          "name": "",
+          "params": {},
+          "links": {},
+          "meta": {},
+          "payload": {
+            "expr": "bins_done <= 2",
+            "note": "the window never over-counts: completions in the quota window stay within the quota. The domain deliberately reaches 3, so this is proven, not declared."
+          },
+          "children": []
+        },
+        {
+          "id": "cadence-anchor",
+          "kind": "invariant",
+          "name": "",
+          "params": {},
+          "links": {},
+          "meta": {},
+          "payload": {
+            "expr": "hoover_gap >= 2",
+            "note": "no two completions of a cadence chore land closer than its cadence — the gap of the last completed pair, saturated at the cadence, never dips below it."
+          },
+          "children": []
+        }
+      ]
+    }
+  ],
+  "counter_examples": []
+}
