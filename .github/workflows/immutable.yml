@@ -1,9 +1,20 @@
-# Versions are immutable: an artifact, once published, is never edited or removed.
-# quern's publish gate enforces this at the content level; this check enforces it at
-# the file level, so not even a hand-pushed commit can rewrite history quietly.
-# (Full validate_package CI needs quern installable here — deferred while quern is a
-# private repo. The proof gate still runs at publish and again at every sync.)
-name: versions are immutable
+# Artifacts enter this registry by one door only: `quern publish`, which proves a package
+# against its own examples and counter-examples before writing it, pushed to the registry
+# by someone who holds it. This workflow guards that door on the side GitHub opens once the
+# repo is public — the pull request — with two refusals:
+#
+#   - Versions are immutable: a published artifact is never edited or removed. quern's
+#     publish gate enforces this at the content level; this enforces it at the file level,
+#     so not even a hand-pushed commit can rewrite history quietly.
+#   - Publication is not a pull request: a hand-added package JSON has not passed the proof
+#     gate, so an added artifact is refused too. To publish, run the door; to carry your own
+#     packages, root your own registry — a fork is a directory copy.
+#
+# A full validate_package check — re-proving each added package here, so the door itself
+# lived in CI — is deferred: it needs quern installable in the workflow, which waits on
+# quern going public. Until then the proof runs at publish and again at every sync, and this
+# file holds the line by refusing hand-added artifacts rather than re-validating them.
+name: artifacts enter only by the publish door
 on: [pull_request]
 jobs:
   immutability:
@@ -14,10 +25,17 @@ jobs:
           fetch-depth: 0
       - run: |
           base=$(git merge-base "origin/${{ github.base_ref }}" HEAD)
-          changed=$(git diff --name-only --diff-filter=MD "$base" HEAD -- packages blobs)
-          if [ -n "$changed" ]; then
+          modified=$(git diff --name-only --diff-filter=MD "$base" HEAD -- packages blobs)
+          if [ -n "$modified" ]; then
             echo "::error::versions are immutable — these artifacts were modified or deleted:"
-            echo "$changed"
+            echo "$modified"
             exit 1
           fi
-          echo "only additions under packages/ and blobs/ — immutability holds"
+          added=$(git diff --name-only --diff-filter=A "$base" HEAD -- packages blobs)
+          if [ -n "$added" ]; then
+            echo "::error::publication is by the 'quern publish' door only — these artifacts were added by hand and have not passed the proof gate:"
+            echo "$added"
+            echo "::error::to publish a package, run 'quern publish'; to carry your own packages, root your own registry (a fork is a directory copy)."
+            exit 1
+          fi
+          echo "no artifact changes under packages/ or blobs/ — the door holds"

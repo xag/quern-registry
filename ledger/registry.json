@@ -1,0 +1,91 @@
+{
+  "_note": "This registry's design ledger, as data in the ledger@0.1.0 vocabulary (a decision carries the alternatives it rejected; a debt carries the condition that discharges it). The repo is data-only and cannot run `quern check` here — quern is not installable while it is private — so this ledger is carried at rest, in the shape a checker would read once it can. That deferral is itself the debt below.",
+  "pin": { "name": "ledger", "version": "0.1.0" },
+  "nodes": [
+    {
+      "id": "publish-door-only",
+      "kind": "decision",
+      "name": "Artifacts enter only by the `quern publish` door; pull requests that hand-add a package are refused",
+      "params": {},
+      "links": {},
+      "meta": {},
+      "payload": {
+        "rationale": "Once this repo is public, GitHub opens a second way in — the pull request — that the publish gate never sees. A package is trusted because it demonstrated itself: every rule exercised by its examples, every rule refuted by its counter-examples, every blob true to its hash. A JSON added by hand in a PR has done none of that. So the immutability workflow, which already refused modified and deleted artifacts, now refuses added ones too, and points the contributor at the door and at rooting their own registry.",
+        "consequence": "A pull request can touch the README, the workflow and housekeeping, but never the registry's contents. The canonical registry is fed only by a maintainer running `quern publish` and pushing; everyone else roots their own — a fork is a directory copy. That is the free path working as intended, not a restriction on it."
+      },
+      "children": [
+        {
+          "id": "validate-in-ci",
+          "kind": "alternative",
+          "name": "Re-prove each added package in CI (a full validate_package round-trip), so the door itself lives in the workflow and PRs that add proven packages are accepted",
+          "params": {},
+          "links": {},
+          "meta": {},
+          "payload": {
+            "why": "The right long-term shape, and rejected only for now: it needs quern installable in CI, which is blocked while quern is a private repo. It is carried as the debt `full-validation-deferred` below and is the first thing to revisit once quern is public. Even then, publication-by-PR would still route a human act (holding a registry, running the door) through GitHub's merge button — a smaller concern, but a real one."
+          },
+          "children": []
+        },
+        {
+          "id": "additions-allowed",
+          "kind": "alternative",
+          "name": "Keep the gate as it was — refuse only modified and deleted artifacts, let additions through",
+          "params": {},
+          "links": {},
+          "meta": {},
+          "payload": {
+            "why": "Fine while the repo was private and only the maintainer could push. Public, it lets an external PR write an artifact that never passed the proof gate straight into the canonical registry: the door would stand open on the GitHub side, and the registry would be trusting review in place of proof."
+          },
+          "children": []
+        },
+        {
+          "id": "review-by-hand",
+          "kind": "alternative",
+          "name": "Accept external package PRs and review the JSON by hand",
+          "params": {},
+          "links": {},
+          "meta": {},
+          "payload": {
+            "why": "A human reading JSON is not the proof gate — it is exactly the taste the substrate exists to remove. A package demonstrates itself mechanically or it does not enter; substituting a reviewer's eye re-introduces the drift the whole discipline is built to catch."
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "full-validation-deferred",
+      "kind": "debt",
+      "name": "CI refuses hand-added artifacts rather than re-proving them, because quern is not installable in the workflow",
+      "params": {
+        "coverage": {
+          "value": 0.0,
+          "unit": "package",
+          "provenance": "asserted",
+          "grounded": false,
+          "source": "no validate_package runs in CI; the proof runs at publish and at every sync, never on the PR",
+          "derived_from": []
+        }
+      },
+      "links": {},
+      "meta": {},
+      "payload": {
+        "cost": "A PR that adds a package is refused wholesale, so there is no in-repo way to accept a genuinely-proven contribution. The blanket refusal is sound but blunt: it cannot tell a proven package from an unproven one, only a hand-added file from none."
+      },
+      "children": [
+        {
+          "id": "quern-public-wire-validate",
+          "kind": "discharge",
+          "name": "When quern is installable in CI, wire `validate_package` into the workflow and let it re-prove each added package",
+          "params": {},
+          "links": {},
+          "meta": {},
+          "payload": {
+            "who": "the maintainer, once quern is public",
+            "condition": "quern resolvable as a CI dependency; the added-artifact refusal is then replaced by a round-trip proof of the digest discipline on the PR"
+          },
+          "children": []
+        }
+      ]
+    }
+  ]
+}
