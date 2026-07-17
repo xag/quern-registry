@@ -1,8 +1,12 @@
 # quern-registry
 
-The **open reference of the registry format**. A registry is not a service — it is a
-directory on git, and this repo is that directory in the open, so the format has a
-reference anyone can read, run, and copy.
+The package registry for [quern](https://github.com/xag/quern) — a Python library that
+keeps a domain's rules and vocabulary as data and publishes them as versioned packages.
+The packages in `packages/` are such bundles; the `quern` CLI (from that repo) is how
+you publish to a registry and consume from one.
+
+A registry is not a service — it is a directory on git, and this repo is that directory
+in the open, so the format has a reference anyone can read, run, and copy.
 
 ## Thirty seconds
 
@@ -64,9 +68,8 @@ fork is a directory copy.
 ## Contributing
 
 There is no hand-editing door into a registry. Artifacts arrive one way — `quern publish`,
-which proves a package against its own examples and counter-examples before writing it —
-and the immutability workflow enforces that on the side GitHub opens once this repo is
-public, the pull request:
+which proves a package against its own examples and counter-examples before writing it.
+CI enforces the same on pull requests:
 
 - **A published version is never edited or removed.** A PR that modifies or deletes an
   artifact is refused: a pin resolves to bytes, and changing them under a fixed
