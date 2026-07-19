@@ -1,0 +1,418 @@
+{
+  "name": "assay",
+  "version": "0.4.1",
+  "description": "Blind trials as checkable data: intent-derived, implementation-blind expectations confronted with the running system. Personas cast the counterparty (simulated humans, rigged machines, nobody for platform guarantees); scenarios record what they were permitted to see; expectations carry their falsifiers; verdicts carry their receipts and are kept, falsified ones above all. The gate that refuses a release resting on provisional verdicts is ledger@'s — a trial without a ledger has nowhere to keep what it learned. 0.2.0 added the fifth confrontation mode: a falsifier may graduate to an expr over the semantic alphabet, and the expectation be discharged by proof and refinement instead of executed — a proof-verdict, naming the model it is a proof of, its artifact for evidence. The standing caveat travels with the machinery: proof relocates risk into specification — a system can perfectly refine a proven model that is wrong about the job. Proof-verdicts therefore never displace the blind-trial discipline; they displace execution. The personas, the held-out set and the critic interrogate the model as much as the realization. 0.3.0 changes no kind, rule or example: it renames the working vocabulary to plain English — mixed, out-of-scope, provisional, the held-out set — because a generic library must not make an adopter learn French to read a verdict. 0.4.0 changes no kind, rule or example either: it moves the ledger requirement to 0.2.0, so a trial and the ledger it keeps its findings in can sit in one closure. That version lets an entry declare what it `rests_on` and go red when its grounds are withdrawn, and makes removing an entry a recorded act rather than a diff - both of which a record of falsified verdicts wants more than most. 0.4.1 moves it to 0.3.0: corrections travel by supersession on every entry kind, and the roll digests what each entry says - a falsified verdict quietly rewritten is exactly the erasure a trial record cannot afford.",
+  "publisher": "xag/assay",
+  "requires": [
+    {
+      "name": "ledger",
+      "version": "0.3.0"
+    }
+  ],
+  "vocabulary": [
+    {
+      "kind": "persona",
+      "description": "Who the trial casts as the counterparty. A human counterparty is simulated by an agent — explicitly, with the simulation named, never silently. A machine counterparty is a stand-in rigged from the vendor's reference implementation. A platform guarantee (does this client honour the spec it published) casts nobody: it is not ours to audit, and a persona for it would be theatre.",
+      "params": {},
+      "links": {},
+      "operations": {}
+    },
+    {
+      "kind": "scenario",
+      "description": "One storyline a persona lives, generated BLIND: from the intent and nothing else — no code, no README, not even the app's name. Its `sight` children are the complete record of what the generation was permitted to see; blindness is a property of inputs, and the record is the only alibi. A scenario embeds its expectations as children.",
+      "params": {},
+      "links": {},
+      "operations": {}
+    },
+    {
+      "kind": "sight",
+      "description": "One thing a scenario's generation was shown, by name (the intent file, and normally nothing else). Complete by construction: anything not listed here was not seen, and a scenario whose sight list would embarrass it is not blind.",
+      "params": {},
+      "links": {},
+      "operations": {}
+    },
+    {
+      "kind": "expectation",
+      "description": "An observable outcome a persona is owed at a step of their story, with an effort/time budget where one makes sense. Falsifiable or it is a mood: every expectation carries at least one `falsifier`. Verdicts accumulate underneath it as the trials run — including the ones that failed.",
+      "params": {},
+      "links": {},
+      "operations": {}
+    },
+    {
+      "kind": "falsifier",
+      "description": "The observation that would fail the expectation above it — stated so a verdict can be `fail` and not merely 'I did not like it'. The same shape a craft law's falsifier takes, on purpose: expectations may cite laws, and both must be violable observably. Payload `{claim, note, expr?}`: `claim` is the prose and is mandatory; `expr`, when the falsifier has graduated, is the same observation in the rule grammar, evaluated over an imported scenario subtree (span names are node kinds; the trace verbs apply). The prose is the meaning and the expr its mechanization — when they disagree, the prose wins and the expr is a bug. The graduation ledger@'s `falsification.expr` already names, taken here.",
+      "params": {},
+      "links": {},
+      "operations": {}
+    },
+    {
+      "kind": "verdict",
+      "description": "The outcome of confronting one expectation once: pass, mixed, fail or out-of-scope, with the mode that produced it (walkthrough, flight, rendered-surface reading, monitor). Carries `evidence`: a count of receipts, grounded when they were verified, ungrounded while the verdict is provisional. Verdicts are KEPT, falsified ones above all — deleting a failed verdict is how a record comes to hold the same belief twice. A verdict decided by proof is not one of these: it is a `proof-verdict`, a kind of its own, because its obligations differ and rules scope by kind.",
+      "params": {},
+      "links": {},
+      "operations": {}
+    },
+    {
+      "kind": "proof-verdict",
+      "description": "The outcome of discharging one expectation by proof and refinement instead of execution: the falsifier's `expr` decided by `tree_check` over the proven model and/or over refined, licensed, total tapes. Same outcomes, same evidence discipline (`provenance=\"proved\"`, `source=\"artifact://<sha>\"`; owed artifact = provisional, and the gate refuses it), same keeping of falsified verdicts. Two further obligations of its own: it names the model it is a proof of (a `model-ref` child — unfalsifiable otherwise), and it never displaces the blind-trial discipline — proof relocates risk into specification, so the personas, the held-out set and the critic interrogate the model exactly as they interrogate the realization. What proof displaces is execution.",
+      "params": {},
+      "links": {},
+      "operations": {}
+    },
+    {
+      "kind": "model-ref",
+      "description": "Which model a proof-verdict is a proof of: payload `{name, version, sha256, artifact}` — the model package pin plus the content address of the proof artifact. A proof that names no model is a conclusion with no premise on record; the pin is what lets a later reader re-run the confrontation against the exact drawing it was decided over.",
+      "params": {},
+      "links": {},
+      "operations": {}
+    },
+    {
+      "kind": "stand-in",
+      "description": "A rigged counterparty for a machine role: the thing the system under trial talks to, built from the vendor's own implementation and wired to the real committed bytes. Its `source-of-truth` child names what it is built from; its `fidelity` param counts the behaviours verified against the real dependency, grounded once someone exercised them. An uninstrumented fake is relocated guessing, and a stand-in without a source is exactly that.",
+      "params": {},
+      "links": {},
+      "operations": {}
+    },
+    {
+      "kind": "source-of-truth",
+      "description": "What a stand-in is built from: the vendor SDK, the reference host, the recorded wire behaviour — by name and version/rev, so the claim 'this fake is faithful' has an address a later reader can check.",
+      "params": {},
+      "links": {},
+      "operations": {}
+    }
+  ],
+  "rules": [
+    {
+      "name": "an-expectation-is-falsifiable",
+      "expr": "len(nodes('falsifier', self)) >= 1",
+      "description": "An expectation nothing could fail produces no verdict, and a verdict is the only thing a trial is for. Without this, a trial is a compliment with a methodology section.",
+      "kind": "expectation"
+    },
+    {
+      "name": "a-scenario-records-its-blindness",
+      "expr": "len(nodes('sight', self)) >= 1",
+      "description": "Blind is a claim about inputs, and claims about inputs need a record: a scenario with no sight list cannot show it was not contaminated, and a contaminated context does not announce itself — the run that taught this had to regenerate every report.",
+      "kind": "scenario"
+    },
+    {
+      "name": "a-stand-in-names-its-source-of-truth",
+      "expr": "len(nodes('source-of-truth', self)) >= 1",
+      "description": "An uninstrumented fake is relocated guessing: a bug in it is indistinguishable from a bug in the thing under trial. Building from the vendor's own implementation is what let one rig find three real bugs in one night instead of three bugs in itself.",
+      "kind": "stand-in"
+    },
+    {
+      "name": "a-verdict-carries-evidence",
+      "expr": "evidence >= 1",
+      "description": "A verdict with no receipts is an opinion filed under a stronger word. The count may be provisional (ungrounded) while verification is owed — that is honest and a gate can see it — but a verdict with nothing behind it at all goes red here.",
+      "kind": "verdict"
+    },
+    {
+      "name": "a-proof-names-its-model",
+      "expr": "len(nodes('model-ref', self)) >= 1",
+      "description": "A proof is a proof OF A MODEL, and a proof-verdict that does not pin which one — name, version, digest, artifact — is unfalsifiable: nobody can re-run the confrontation, and nobody can say the model it leaned on was wrong. The house pattern of a-stand-in-names-its-source-of-truth, applied to the premise instead of the counterparty.",
+      "kind": "proof-verdict"
+    },
+    {
+      "name": "a-proof-verdict-carries-evidence",
+      "expr": "evidence >= 1",
+      "description": "The proof artifact is the receipt, and a proof-verdict with no evidence param at all would sail past a gate that only inspects the params a node chose to carry. Same discipline as a-verdict-carries-evidence, bound to this kind because rules scope by kind.",
+      "kind": "proof-verdict"
+    }
+  ],
+  "solvers": [],
+  "examples": [
+    {
+      "id": "the-latecomer",
+      "kind": "persona",
+      "name": "Signs up in a rush, disappears for three weeks, comes back guilty",
+      "params": {},
+      "links": {},
+      "meta": {},
+      "payload": {
+        "cast": "simulated by a fresh agent, declared as such",
+        "axes": "disrupted context; error behaviour: returns late"
+      },
+      "children": [
+        {
+          "id": "the-return",
+          "kind": "scenario",
+          "name": "Coming back after three silent weeks must cost nothing",
+          "params": {},
+          "links": {},
+          "meta": {},
+          "payload": {},
+          "children": [
+            {
+              "id": "saw-the-intent",
+              "kind": "sight",
+              "name": "the intent file, inline, and nothing else",
+              "params": {},
+              "links": {},
+              "meta": {},
+              "payload": {
+                "note": "no code, no README, no app name; the working directory name was declared non-information"
+              },
+              "children": []
+            },
+            {
+              "id": "no-guilt-pile",
+              "kind": "expectation",
+              "name": "Returning shows what to do next — never a pile of what was missed",
+              "params": {},
+              "links": {},
+              "meta": {},
+              "payload": {
+                "budget": "understood within one screen, no scrolling"
+              },
+              "children": [
+                {
+                  "id": "pile-observed",
+                  "kind": "falsifier",
+                  "name": "Any enumeration of missed items on the return surface",
+                  "params": {},
+                  "links": {},
+                  "meta": {},
+                  "payload": {
+                    "claim": "one list, count or streak-shame on first contact after absence fails this",
+                    "expr": "len(nodes('return-after-absence', self)) >= 1 and (len(nodes('missed-pile-shown', self)) >= 1 or len(nodes('next-action-shown', self)) == 0)"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "return-verdict",
+                  "kind": "verdict",
+                  "name": "pass — rendered return surface shows next step only",
+                  "params": {
+                    "evidence": {
+                      "value": 2.0,
+                      "unit": "receipt",
+                      "provenance": "verified",
+                      "grounded": true,
+                      "source": "two rendered zero-state dumps, read",
+                      "derived_from": []
+                    }
+                  },
+                  "links": {},
+                  "meta": {},
+                  "payload": {
+                    "outcome": "pass",
+                    "mode": "rendered-surface reading"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "return-proved",
+                  "kind": "proof-verdict",
+                  "name": "pass — the expr holds over the proven model and every refined, licensed, total tape on record",
+                  "params": {
+                    "evidence": {
+                      "value": 1.0,
+                      "unit": "artifact",
+                      "provenance": "proved",
+                      "grounded": true,
+                      "source": "artifact://the proof run, content-addressed",
+                      "derived_from": []
+                    }
+                  },
+                  "links": {},
+                  "meta": {},
+                  "payload": {
+                    "outcome": "pass"
+                  },
+                  "children": [
+                    {
+                      "id": "the-drawing",
+                      "kind": "model-ref",
+                      "name": "the model this proof is a proof of",
+                      "params": {},
+                      "links": {},
+                      "meta": {},
+                      "payload": {
+                        "name": "the model package, by name",
+                        "version": "its exact version",
+                        "sha256": "its pinned digest",
+                        "artifact": "artifact://the proof run — the address a later reader re-runs the confrontation from"
+                      },
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "the-calendar-peer",
+      "kind": "stand-in",
+      "name": "The calendar service the system syncs against, rigged not guessed",
+      "params": {
+        "fidelity": {
+          "value": 3.0,
+          "unit": "behaviour",
+          "provenance": "exercised",
+          "grounded": true,
+          "source": "three sync behaviours replayed against the vendor SDK's own client",
+          "derived_from": []
+        }
+      },
+      "links": {},
+      "meta": {},
+      "payload": {},
+      "children": [
+        {
+          "id": "vendor-sdk-client",
+          "kind": "source-of-truth",
+          "name": "the vendor's published client library, at the pinned version",
+          "params": {},
+          "links": {},
+          "meta": {},
+          "payload": {
+            "address": "the reference implementation the wire behaviour was verified against, by name and version"
+          },
+          "children": []
+        }
+      ]
+    }
+  ],
+  "counter_examples": [
+    {
+      "rule": "an-expectation-is-falsifiable",
+      "nodes": [
+        {
+          "id": "feels-nice",
+          "kind": "expectation",
+          "name": "It should feel pleasant to come back",
+          "params": {},
+          "links": {},
+          "meta": {},
+          "payload": {},
+          "children": []
+        }
+      ],
+      "because": "a mood wearing an expectation's kind"
+    },
+    {
+      "rule": "a-scenario-records-its-blindness",
+      "nodes": [
+        {
+          "id": "trust-me-it-was-blind",
+          "kind": "scenario",
+          "name": "A storyline with no record of what its author saw",
+          "params": {},
+          "links": {},
+          "meta": {},
+          "payload": {},
+          "children": []
+        }
+      ],
+      "because": "a scenario that cannot show what it was generated from"
+    },
+    {
+      "rule": "a-stand-in-names-its-source-of-truth",
+      "nodes": [
+        {
+          "id": "hand-rolled-stub",
+          "kind": "stand-in",
+          "name": "A calendar stub written from memory of the docs",
+          "params": {
+            "fidelity": {
+              "value": 0.0,
+              "unit": "behaviour",
+              "provenance": "asserted",
+              "grounded": false,
+              "source": "nobody checked it against anything",
+              "derived_from": []
+            }
+          },
+          "links": {},
+          "meta": {},
+          "payload": {},
+          "children": []
+        }
+      ],
+      "because": "an uninstrumented fake — relocated guessing"
+    },
+    {
+      "rule": "a-verdict-carries-evidence",
+      "nodes": [
+        {
+          "id": "looked-fine-to-me",
+          "kind": "verdict",
+          "name": "pass, probably",
+          "params": {},
+          "links": {},
+          "meta": {},
+          "payload": {
+            "outcome": "pass",
+            "mode": "vibes"
+          },
+          "children": []
+        }
+      ],
+      "because": "an opinion filed under a stronger word"
+    },
+    {
+      "rule": "a-proof-names-its-model",
+      "nodes": [
+        {
+          "id": "proved-against-something",
+          "kind": "proof-verdict",
+          "name": "pass — the checker said so",
+          "params": {
+            "evidence": {
+              "value": 1.0,
+              "unit": "artifact",
+              "provenance": "proved",
+              "grounded": true,
+              "source": "artifact://a real artifact, of an unnamed model",
+              "derived_from": []
+            }
+          },
+          "links": {},
+          "meta": {},
+          "payload": {
+            "outcome": "pass"
+          },
+          "children": []
+        }
+      ],
+      "because": "a conclusion with no premise on record — proved against what?"
+    },
+    {
+      "rule": "a-proof-verdict-carries-evidence",
+      "nodes": [
+        {
+          "id": "trust-the-math",
+          "kind": "proof-verdict",
+          "name": "pass — it is proven, somewhere",
+          "params": {},
+          "links": {},
+          "meta": {},
+          "payload": {
+            "outcome": "pass"
+          },
+          "children": [
+            {
+              "id": "a-model-at-least",
+              "kind": "model-ref",
+              "name": "the model is named; the artifact is not",
+              "params": {},
+              "links": {},
+              "meta": {},
+              "payload": {
+                "name": "the model package, by name",
+                "version": "its exact version",
+                "sha256": "its pinned digest",
+                "artifact": "owed"
+              },
+              "children": []
+            }
+          ]
+        }
+      ],
+      "because": "a proof whose artifact nobody can ask for"
+    }
+  ]
+}
